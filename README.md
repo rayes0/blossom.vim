@@ -6,6 +6,8 @@ beneath cherry blossoms.
 
   - Haiku by Kobayashi Issa
 
+<br>
+
 ![](images/screenshot1.png)
 
 ![](images/screenshot2.png)
