@@ -40,24 +40,23 @@ let g:colors_name = 'blossom'
 " Green BG: #cefbbe - bg_green
 "
 
-let s:bg_def = ['#ede6e3', '0']
-let s:bg_soft = ['#dad3d0', '1']
-let s:bg_neutral = ['#b6a8a2', '2']
-let s:bg_hardcol = ['#e3d0cb', '3']
-let s:bg_softcol = ['#e6dad6', '4']
-let s:fg_def = ['#685c56', '5']
-"let s:fg_dark = ['#4b403a', '6']
-let s:fg_dark = ['#574b45', '6']
-let s:fg_light = ['#938680', '7']
-let s:fg_pink = ['#8f8678', '8']
-let s:bg_red = ['#fccec1', '9']
-let s:bg_yellow = ['#fbf1be', '10']
-let s:bg_green = ['#cefbbe', '11']
+"let s:bg_def = ['#ede6e3', '254']
+let s:bg_def = ['#ede6e3', '254']
+let s:bg_soft = ['#dad3d0', '252']
+let s:bg_neutral = ['#b6a8a2', '248']
+let s:bg_hardcol = ['#e3d0cb', '188']
+let s:bg_softcol = ['#e6dad6', '253']
+let s:fg_def = ['#685c56', '240']
+let s:fg_dark = ['#574b45', '239']
+let s:fg_light = ['#938680', '102']
+let s:fg_pink = ['#8f8678', '102']
+let s:bg_red = ['#fccec1', '217']
+let s:bg_yellow = ['#fbf1be', '230']
+let s:bg_green = ['#cefbbe', '194']
 
-let s:syn_red = ['#9e552f', '12']
-"let s:syn_red = ['#b35976', '12']
-let s:syn_magenta = ['#995c8c', '13']
-let s:syn_cyan = ['#407680', '14']
+let s:syn_red = ['#9e552f', '131']
+let s:syn_magenta = ['#995c8c', '96']
+let s:syn_cyan = ['#407680', '66']
 
 " Highlighting function
 if (has('termguicolors') && &termguicolors) || has('gui_running')
@@ -172,7 +171,6 @@ hi! link Substitute IncSearch
 " ============== Syntax ===============
 " TODO: Base groups
 " ===== Base Groups =====
-call s:hl("PreProc", s:syn_cyan, "NONE", "italic", "NONE")
 call s:hl("Comment", s:fg_pink, "NONE", "italic", "NONE")
 call s:hl("Identifier", s:syn_red, "NONE", "italic", "NONE")
 call s:hl("Type", s:fg_def, "NONE", "italic", "NONE")
@@ -183,14 +181,32 @@ hi! link Todo WarningMsg
 hi! link Ignore Conceal
 
 call s:hl("Statement", s:syn_magenta, "NONE", "italic", "NONE")
-call s:hl("Operator", "NONE", "NONE", "NONE", "NONE")
+call s:hl("Operator", s:syn_magenta, "NONE", "NONE", "NONE")
 call s:hl("Keyword", "NONE", "NONE", "NONE", "NONE")
+
+call s:hl("PreProc", s:syn_cyan, "NONE", "italic", "NONE")
+call s:hl("Macro", s:syn_cyan, "NONE", "NONE", "NONE")
 
 call s:hl("Constant", s:fg_dark, "NONE", "NONE", "NONE")
 " call s:hl("String", s:fg_dark, "NONE", "italic", "NONE")
 call s:hl("Boolean", s:syn_magenta, "NONE", "italic", "NONE")
 
 " ===== Specific Groups =====
+" XXX
+" ----- General Info -----
+" Try to use these whenever possible. Prefer italic over bold.
+" Braces: link to default
+call s:hl("lightBraces", s:fg_def, "NONE", "NONE", "NONE")
+" Use For Special Constants: (eg:color names)
+call s:hl("specialCons", s:fg_dark, "NONE", "italic", "NONE")
+"  Use For Special Names: (eg:class names)
+call s:hl("specialNm", s:syn_magenta, "NONE", "italic", "NONE")
+" Labels: link to "Type: (default color, just italicized)
+" Function Names: link to "Preproc: (cyan color) for 'special' ones, "Identifier: (red
+" color) for other ones
+" 
+" XXX
+
 " ----- Markdown -----
 call s:hl("markdownHeadingDelimter", "NONE", "NONE", "underline", "NONE")
 call s:hl("mkdHeading", "NONE", "NONE", "italic,bold,underline", "NONE")
@@ -201,7 +217,7 @@ hi! link markdownH4 mkdHeading
 hi! link markdownH5 mkdHeading
 hi! link markdownH6 mkdHeading
 
-call s:hl("markdownCode", "NONE", "NONE", "bold", "NONE")
+call s:hl("markdownCode", s:fg_light, "NONE", "italic", "NONE")
 hi! link markdownCodeDelimiter folded
 call s:hl("markdownBold", "NONE", "NONE", "bold", "NONE")
 hi! link markdownBoldDelimiter folded
@@ -225,7 +241,7 @@ hi! link pandocAtxHeader mkdHeading
 hi! link pandocAtxStart markdownHeadingDelimter
 
 " ----- Html -----
-" Have to include this otherwise it will be highlighted with TabLineSel
+" Have to include this otherwise it will be highlighted with TabLineSel for some reason
 hi! link htmlTitle mkdHeading
 hi! link htmlH1 mkdHeading
 hi! link htmlH2 mkdHeading
@@ -233,6 +249,29 @@ hi! link htmlH3 mkdHeading
 hi! link htmlH4 mkdHeading
 hi! link htmlH5 mkdHeading
 hi! link htmlH6 mkdHeading
+
+hi! link htmlLink markdownUrl
+hi! link htmlScriptTag Preproc
+hi! link htmlSpecialTagName Preproc
+
+" ----- css -----
+hi! link cssBraces lightBraces
+hi! link cssColor specialCons
+hi! link cssTagName specialNM
+hi! link cssClassName specialNM
+hi! link cssImportant Preproc
+
+hi! link sassClass cssClassName
+hi! link sassClassChar cssClassNameDot
+
+" ----- Javascript -----
+hi! link javascriptBraces Normal
+
+" ---- AsciiDoc -----
+call s:hl("asciidocTwoLineTitle", s:fg_def, "NONE", "italic,bold", "NONE")
+call s:hl("asciidocTwoTitleUnderline", s:syn_red, "NONE", "italic,bold", "NONE")
+
+" ---- Plugins ------ XXX
 
 " ----- NERDTree -----
 call s:hl("NERDTreeCWD", s:fg_def, "NONE", "italic,bold,underline", "NONE")

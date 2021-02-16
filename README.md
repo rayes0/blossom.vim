@@ -12,3 +12,16 @@ beneath cherry blossoms.
 
 ![](images/screenshot2.png)
 
+#### Install
+
+```
+Plug 'rayes0/blossom.vim'
+```
+
+#### Usage
+
+```
+set termguicolors
+colorscheme blossom
+```
+
