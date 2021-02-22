@@ -2,6 +2,12 @@
 " Author: rayes <www.github.com/rayes0>
 " URL: https://www.github.com/rayes0/blossom.vim
 
+" Exit if terminal doesn't support 256 colors
+if !(has('termguicolors') && &termguicolors) || has('gui_running')
+	echoerr "ERROR: blossom.vim requires a true color terminal"
+	finish
+endif
+
 hi clear
 if exists('syntax_on')
 	syntax reset
@@ -40,7 +46,6 @@ let g:colors_name = 'blossom'
 " Green BG: #cefbbe - bg_green
 "
 
-"let s:bg_def = ['#ede6e3', '254']
 let s:bg_def = ['#ede6e3', '254']
 let s:bg_soft = ['#dad3d0', '252']
 let s:bg_neutral = ['#b6a8a2', '248']
@@ -112,7 +117,6 @@ call s:hl("StatusLine", s:fg_def, s:bg_hardcol, "bold,italic", "NONE")
 call s:hl("StatusLineNC", s:fg_def, s:bg_softcol, "italic", "NONE")
 " call s:hl("WildMenu
 call s:hl("TabLine", s:fg_light, s:bg_soft, "italic", "NONE")
-"call s:hl("TabLineSel", s:bg_def, s:fg_pink, "bold,italic", "NONE")
 call s:hl("TabLineSel", s:fg_dark, s:bg_hardcol, "bold,italic", "NONE")
 hi! link Title TabLineSel
 hi! link TabLineFill TabLine
@@ -134,8 +138,9 @@ call s:hl("MatchParen", "NONE", s:bg_soft, "underline,bold", "NONE")
 hi! link ErrorMsg Error
 hi! link EndOfBuffer LineNr
 hi! link NonText Whitespace
-hi! link ModeMsg Normal
-hi! link MoreMsg Normal
+"hi! link ModeMsg Normal
+call s:hl("ModeMsg", "NONE", "NONE", "italic,bold", "NONE")
+hi! link MoreMsg ModeMsg
 hi! link MsgArea Normal
 hi! link MsgSeparator Normal
 
@@ -169,7 +174,6 @@ hi! link Substitute IncSearch
 
 " XXX
 " ============== Syntax ===============
-" TODO: Base groups
 " ===== Base Groups =====
 call s:hl("Comment", s:fg_pink, "NONE", "italic", "NONE")
 call s:hl("Identifier", s:syn_red, "NONE", "italic", "NONE")
@@ -204,11 +208,13 @@ call s:hl("specialNm", s:syn_magenta, "NONE", "italic", "NONE")
 " Labels: link to "Type: (default color, just italicized)
 " Function Names: link to "Preproc: (cyan color) for 'special' ones, "Identifier: (red
 " color) for other ones
+" TabLlineSel Override: use for headers to override TabLineSel
+call s:hl("overrideHeader", s:fg_def, "NONE", "italic,bold", "NONE")
 " 
 " XXX
 
 " ----- Markdown -----
-call s:hl("markdownHeadingDelimter", "NONE", "NONE", "underline", "NONE")
+call s:hl("markdownHeadingDelimter", s:syn_magenta, "NONE", "underline", "NONE")
 call s:hl("mkdHeading", "NONE", "NONE", "italic,bold,underline", "NONE")
 hi! link markdownH1 mkdHeading
 hi! link markdownH2 mkdHeading
@@ -218,18 +224,18 @@ hi! link markdownH5 mkdHeading
 hi! link markdownH6 mkdHeading
 
 call s:hl("markdownCode", s:fg_light, "NONE", "italic", "NONE")
-hi! link markdownCodeDelimiter folded
+hi! link markdownCodeDelimiter Folded
 call s:hl("markdownBold", "NONE", "NONE", "bold", "NONE")
-hi! link markdownBoldDelimiter folded
+hi! link markdownBoldDelimiter Folded
 call s:hl("markdownItalic", "NONE", "NONE", "italic", "NONE")
-hi! link markdownItalicDelimiter folded
+hi! link markdownItalicDelimiter Folded
 call s:hl("markdownBoldItalic", "NONE", "NONE", "italic,bold", "NONE")
-hi! link markdownBoldItalicDelimiter folded
+hi! link markdownBoldItalicDelimiter Folded
 call s:hl("markdownUrl", "NONE", "NONE", "underline", "NONE")
-hi! link markdownLinkDelimiter folded
-hi! link markdownLinkDelimiter folded
-call s:hl("markdownLinkText", "NONE", "NONE", "NONE", "NONE")
-hi! link markdownLinkTextDelimiter folded
+hi! link markdownLinkDelimiter Folded
+hi! link markdownLinkDelimiter Folded
+call s:hl("markdownLinkText", "NONE", "NONE", "italic", "NONE")
+hi! link markdownLinkTextDelimiter Folded
 
 " ----- Pandoc -----
 " Make pandoc similar to markdown
@@ -239,6 +245,8 @@ hi! link pandocEmphasisInStrong markdownBoldItalic
 " hi! pandocEmphasisInStrong guifg=NONE guibg=NONE guisp=NONE gui=italic,bold
 hi! link pandocAtxHeader mkdHeading
 hi! link pandocAtxStart markdownHeadingDelimter
+
+hi! link pandocSetexHeader overrideHeader
 
 " ----- Html -----
 " Have to include this otherwise it will be highlighted with TabLineSel for some reason
@@ -267,11 +275,15 @@ hi! link sassClassChar cssClassNameDot
 " ----- Javascript -----
 hi! link javascriptBraces Normal
 
-" ---- AsciiDoc -----
-call s:hl("asciidocTwoLineTitle", s:fg_def, "NONE", "italic,bold", "NONE")
+" ----- AsciiDoc -----
+hi! link asciidocTwoLineTitle overrideHeader
 call s:hl("asciidocTwoTitleUnderline", s:syn_red, "NONE", "italic,bold", "NONE")
 
-" ---- Plugins ------ XXX
+" ----- sh -----
+" Remove italics from some stuff
+call s:hl("shTestopr", s:syn_magenta, "NONE", "NONE", "NONE")
+
+" ----- Plugins ------ XXX
 
 " ----- NERDTree -----
 call s:hl("NERDTreeCWD", s:fg_def, "NONE", "italic,bold,underline", "NONE")
@@ -281,3 +293,6 @@ call s:hl("NERDTreeExecFile", s:fg_def, "NONE", "italic", "NONE")
 call s:hl("NERDTreeHelp", s:fg_light, "NONE", "italic", "NONE")
 call s:hl("NERDTreeOpenable", s:fg_light, "NONE", "italic", "NONE")
 call s:hl("NERDTreeCloseable", s:fg_light, "NONE", "italic", "NONE")
+
+" ----- Todo.txt -----
+hi!link TodoContext Comment
