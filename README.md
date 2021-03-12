@@ -16,6 +16,8 @@ beneath cherry blossoms.
 
 *You need a *true color* terminal for this theme to work*.
 
+Vim plug example:
+
 ```
 Plug 'rayes0/blossom.vim'
 ```

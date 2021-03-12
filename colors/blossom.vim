@@ -3,10 +3,10 @@
 " URL: https://www.github.com/rayes0/blossom.vim
 
 " Exit if terminal doesn't support 256 colors
-if !(has('termguicolors') && &termguicolors) || has('gui_running')
-	echoerr "ERROR: blossom.vim requires a true color terminal"
-	finish
-endif
+"if !(has('termguicolors') && &termguicolors) || has('gui_running')
+"	echoerr "ERROR: blossom.vim requires a true color terminal"
+"	finish
+"endif
 
 hi clear
 if exists('syntax_on')
@@ -81,10 +81,14 @@ if (has('termguicolors') && &termguicolors) || has('gui_running')
 	endfunction
 else
 	function! s:hl(group, fg, bg, attr, sp)
-		if a:fg[1] != ""
+		if a:fg[1] = "NONE"
+			exec "hi " . a:group . " ctermfg=" . "NONE"
+		else
 			exec "hi " . a:group . " ctermfg=" . a:fg[1]
 		endif
-		if a:bg[1] != ""
+		if a:bg[1] = "NONE"
+			exec "hi " . a:group . " ctermbg=" . "NONE"
+		else
 			exec "hi " . a:group . " ctermbg=" . a:bg[1]
 		endif
 		if a:attr != ""
@@ -157,9 +161,13 @@ hi! link EndOfBuffer Normal
 
 " ----- Diff ------
 call s:hl("DiffAdd", s:fg_dark, s:bg_green, "NONE", "NONE")
-call s:hl("DiffDelete", s:fg_dark, s:bg_red, "NONE", "NONE")
+hi! link diffAdded DiffAdd
+call s:hl("DiffDelete", s:fg_dark, s:bg_red, "italic", "NONE")
+hi! link diffRemoved DiffDelete
 call s:hl("DiffChange", s:fg_dark, s:bg_yellow, "NONE", "NONE")
 call s:hl("DiffText", s:fg_dark, s:bg_yellow, "bold", "NONE")
+call s:hl("diffNewFile" ,s:syn_cyan, "NONE", "italic", "NONE")
+call s:hl("diffFile" ,s:syn_cyan, "NONE", "italic", "NONE")
 
 " ----- Spellcheck -----
 hi! link SpellBad ErrorMsg
@@ -214,14 +222,14 @@ call s:hl("overrideHeader", s:fg_def, "NONE", "italic,bold", "NONE")
 " XXX
 
 " ----- Markdown -----
-call s:hl("markdownHeadingDelimter", s:syn_magenta, "NONE", "underline", "NONE")
-call s:hl("mkdHeading", "NONE", "NONE", "italic,bold,underline", "NONE")
+call s:hl("mkdHeading", "NONE", "NONE", "italic,bold", "NONE")
 hi! link markdownH1 mkdHeading
 hi! link markdownH2 mkdHeading
 hi! link markdownH3 mkdHeading
 hi! link markdownH4 mkdHeading
 hi! link markdownH5 mkdHeading
 hi! link markdownH6 mkdHeading
+call s:hl("markdownHeadingDelimiter", s:syn_magenta, "NONE", "bold", "NONE")
 
 call s:hl("markdownCode", s:fg_light, "NONE", "italic", "NONE")
 hi! link markdownCodeDelimiter Folded
@@ -244,7 +252,7 @@ hi! link pandocStrong markdownBold
 hi! link pandocEmphasisInStrong markdownBoldItalic
 " hi! pandocEmphasisInStrong guifg=NONE guibg=NONE guisp=NONE gui=italic,bold
 hi! link pandocAtxHeader mkdHeading
-hi! link pandocAtxStart markdownHeadingDelimter
+hi! link pandocAtxStart markdownHeadingDelimiter
 
 hi! link pandocSetexHeader overrideHeader
 
@@ -294,5 +302,3 @@ call s:hl("NERDTreeHelp", s:fg_light, "NONE", "italic", "NONE")
 call s:hl("NERDTreeOpenable", s:fg_light, "NONE", "italic", "NONE")
 call s:hl("NERDTreeCloseable", s:fg_light, "NONE", "italic", "NONE")
 
-" ----- Todo.txt -----
-hi!link TodoContext Comment
