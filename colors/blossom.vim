@@ -63,6 +63,28 @@ let s:syn_red = ['#9e552f', '131']
 let s:syn_magenta = ['#995c8c', '96']
 let s:syn_cyan = ['#407680', '66']
 
+if has("nvim")
+	let g:terminal_color_0 =  "#ede6e3"
+	let g:terminal_color_8 =  "#ede6e3"
+	let g:terminal_color_1 =  "#3A3A3A"
+	let g:terminal_color_9 =  "#3A3A3A"
+	let g:terminal_color_2 =  "#637A8A"
+	let g:terminal_color_10 = "#637A8A"
+	let g:terminal_color_3 =  "#AA8F7C"
+	let g:terminal_color_11 = "#AA8F7C"
+	let g:terminal_color_4 =  "#8B8F7E"
+	let g:terminal_color_12 = "#8B8F7E"
+	let g:terminal_color_5 =  "#877979"
+	let g:terminal_color_13 = "#877979"
+	let g:terminal_color_6 =  "#937F74"
+	let g:terminal_color_14 = "#937F74"
+	let g:terminal_color_7 =  "#685c56"
+	let g:terminal_color_15 = "#685c56"
+	let g:terminal_color_background = g:terminal_color_0
+	let g:terminal_color_foreground = g:terminal_color_7
+endif
+
+
 " Highlighting function
 if (has('termguicolors') && &termguicolors) || has('gui_running')
 	function! s:hl(group, fg, bg, attr, sp)
@@ -104,9 +126,9 @@ endif
 " ----- Basic ------
 call s:hl("Normal", s:fg_def, s:bg_def, "NONE", "NONE")
 
+call s:hl("Cursor", s:bg_def, s:fg_def, "NONE", "NONE")
 call s:hl("CursorLineNr", s:fg_dark, s:bg_def, "NONE", "NONE")
 call s:hl("CursorLine", s:fg_dark, s:bg_def, "NONE", "NONE")
-call s:hl("Cursor", s:bg_def, s:fg_def, "NONE", "NONE")
 hi! link CursorIM Cursor
 hi! link lCursor Cursor
 hi! link TermCursor Cursor
@@ -121,7 +143,8 @@ call s:hl("StatusLine", s:fg_def, s:bg_hardcol, "bold,italic", "NONE")
 call s:hl("StatusLineNC", s:fg_def, s:bg_softcol, "italic", "NONE")
 " call s:hl("WildMenu
 call s:hl("TabLine", s:fg_light, s:bg_soft, "italic", "NONE")
-call s:hl("TabLineSel", s:fg_dark, s:bg_hardcol, "bold,italic", "NONE")
+"call s:hl("TabLineSel", s:fg_dark, s:bg_hardcol, "bold,italic", "NONE")
+call s:hl("TabLineSel", s:fg_dark, "NONE", "bold,italic", "NONE")
 hi! link Title TabLineSel
 hi! link TabLineFill TabLine
 
@@ -152,7 +175,7 @@ hi! link NormalFloat Pmenu
 hi! link NormalNC Normal
 
 call s:hl("WarningMsg", s:fg_def, s:bg_red, "italic,underline", "NONE")
-call s:hl("Whitespace", s:bg_neutral, "NONE", "NONE", "NONE")
+call s:hl("Whitespace", s:bg_soft, "NONE", "NONE", "NONE")
 hi! link SpecialKey Whitespace
 hi! link Visual Search
 hi! link VisualNOS Visual
@@ -161,13 +184,16 @@ hi! link EndOfBuffer Normal
 
 " ----- Diff ------
 call s:hl("DiffAdd", s:fg_dark, s:bg_green, "NONE", "NONE")
-hi! link diffAdded DiffAdd
 call s:hl("DiffDelete", s:fg_dark, s:bg_red, "italic", "NONE")
-hi! link diffRemoved DiffDelete
-call s:hl("DiffChange", s:fg_dark, s:bg_yellow, "NONE", "NONE")
+call s:hl("DiffChange", s:fg_dark, s:bg_softcol, "NONE", "NONE")
 call s:hl("DiffText", s:fg_dark, s:bg_yellow, "bold", "NONE")
 call s:hl("diffNewFile" ,s:syn_cyan, "NONE", "italic", "NONE")
 call s:hl("diffFile" ,s:syn_cyan, "NONE", "italic", "NONE")
+
+hi! link diffAdded DiffAdd
+hi! link diffRemoved DiffDelete
+hi! link diffChanged DiffChange
+hi! link diffComment Comment
 
 " ----- Spellcheck -----
 hi! link SpellBad ErrorMsg
@@ -192,9 +218,10 @@ call s:hl("Error", s:fg_def, s:bg_red, "NONE", "NONE")
 hi! link Todo WarningMsg
 hi! link Ignore Conceal
 
-call s:hl("Statement", s:syn_magenta, "NONE", "italic", "NONE")
+"call s:hl("Statement", s:syn_magenta, "NONE", "italic", "NONE")
+call s:hl("Statement", s:syn_magenta, "NONE", "NONE", "NONE")
 call s:hl("Operator", s:syn_magenta, "NONE", "NONE", "NONE")
-call s:hl("Keyword", "NONE", "NONE", "NONE", "NONE")
+call s:hl("Keyword", "NONE", "NONE", "italic", "NONE")
 
 call s:hl("PreProc", s:syn_cyan, "NONE", "italic", "NONE")
 call s:hl("Macro", s:syn_cyan, "NONE", "NONE", "NONE")
@@ -270,6 +297,12 @@ hi! link htmlLink markdownUrl
 hi! link htmlScriptTag Preproc
 hi! link htmlSpecialTagName Preproc
 
+" ----- XML -----
+" Make similar to html
+hi! link xmlTagName Statement
+hi! link xmlEndTag Statement
+hi! link xmlEqual Identifier
+
 " ----- css -----
 hi! link cssBraces lightBraces
 hi! link cssColor specialCons
@@ -302,3 +335,6 @@ call s:hl("NERDTreeHelp", s:fg_light, "NONE", "italic", "NONE")
 call s:hl("NERDTreeOpenable", s:fg_light, "NONE", "italic", "NONE")
 call s:hl("NERDTreeCloseable", s:fg_light, "NONE", "italic", "NONE")
 
+" ----- Taglist ----- "
+call s:hl("TagListFileName", s:fg_def, "NONE", "italic,bold,underline", "NONE")
+call s:hl("TagListTitle", s:fg_def, "NONE", "italic,bold", "NONE")
