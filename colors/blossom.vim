@@ -88,34 +88,33 @@ endif
 " Highlighting function
 if (has('termguicolors') && &termguicolors) || has('gui_running')
 	function! s:hl(group, fg, bg, attr, sp)
-		if a:fg[0] != ""
+		if type(a:fg) == v:t_list
 			exec "hi " . a:group . " guifg=" . a:fg[0]
+		else
+			exec "hi " . a:group . " guifg=" . a:fg
 		endif
-		if a:bg[0] != ""
+
+		if type(a:bg) == v:t_list
 			exec "hi " . a:group . " guibg=" . a:bg[0]
+		else
+			exec "hi " . a:group . " guibg=" . a:bg
 		endif
-		if a:attr != ""
-			exec "hi " . a:group . " gui=" . a:attr . " cterm=" . a:attr
-		endif
-		if a:sp != ""
-			exec "hi " . a:group . " guisp=" . a:sp
-		endif
+		exec "hi " . a:group . " gui=" . a:attr . " cterm=" . a:attr
+		exec "hi " . a:group . " guisp=" . a:sp
 	endfunction
 else
 	function! s:hl(group, fg, bg, attr, sp)
-		if a:fg[1] = "NONE"
-			exec "hi " . a:group . " ctermfg=" . "NONE"
-		else
+		if type(a:fg) == v:t_list
 			exec "hi " . a:group . " ctermfg=" . a:fg[1]
-		endif
-		if a:bg[1] = "NONE"
-			exec "hi " . a:group . " ctermbg=" . "NONE"
 		else
+			exec "hi " . a:group . " ctermfg=" . a:fg
+		endif
+		if type(a:bg) == v:t_list
 			exec "hi " . a:group . " ctermbg=" . a:bg[1]
+		else
+			exec "hi " . a:group . " ctermbg=" . a:bg
 		endif
-		if a:attr != ""
-			exec "hi " . a:group . " cterm=" . a:attr
-		endif
+		exec "hi " . a:group . " cterm=" . a:attr
 	endfunction
 endif
 
